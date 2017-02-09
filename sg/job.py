@@ -55,7 +55,7 @@ class Job(object):
 
             hours = int(run_time // 3600)
             minutes = int((run_time % 3600) // 60)
-            seconds = int(run_time - minutes * 60)
+            seconds = int(run_time - hours * 3600 - minutes * 60)
 
             now = datetime.datetime.now()
             if last_announce is None or (now - last_announce).total_seconds() > _ANNOUNCE_INTERVAL_S:
