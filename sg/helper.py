@@ -33,6 +33,13 @@ class Helper(object):
             print("Requesting archive delete: ({}) [{}]".format(i, description))
             a.delete(vault_name, archive_id)
 
+# TODO(dustin): It doesn't seem necessary to block on the archives being 
+# deleted, here. However, it seems like archives are not always deleted 
+# immediately when done using the AWS-CLI tool. Therefore, there's a chance 
+# that we might have to go into an inventory-retrieval loop (until we hit some 
+# configurable timeout, such as twenty-four hours) until we know that the vault 
+# is empty.
+
         print("Deleting vault: {}".format(vault_name))
 
         v = sg.vault.Vault(self.__ar)
