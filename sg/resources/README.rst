@@ -15,6 +15,15 @@ In order to delete a vault, the normal process is:
 This can become obnoxious. The goal of this tool is to execute synchronous workflows that just stay running until the job is done.
 
 
+-------
+Install
+-------
+
+Install using PIP::
+
+    $ sudo pip install synchronous_glacier
+
+
 -----
 Tools
 -----
