@@ -1,0 +1,35 @@
+#!/usr/bin/env python2.7
+
+import argparse
+import os
+
+import sg.resource
+import sg.helper
+
+def _get_args():
+    description = "Do synchronous workflows against Glacier"
+
+    parser = argparse.ArgumentParser(description=description)
+
+    parser.add_argument(
+        'access_key',
+        help='AWS access key')
+
+    parser.add_argument(
+        'secret_key',
+        help='AWS secret key')
+
+    parser.add_argument(
+        'vault_name',
+        help="Vault")
+
+    return parser.parse_args()
+
+def _main():
+    args = _get_args()
+    ar = sg.resource.AwsResource(args.access_key, args.secret_key)
+    h = sg.helper.Helper(ar)
+    h.delete_vault(args.vault_name)
+
+if __name__ == '__main__':
+    _main()

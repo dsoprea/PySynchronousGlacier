@@ -1,0 +1,1 @@
+sg/resources/README.rst
