@@ -10,6 +10,7 @@ In order to delete a vault, the normal process is:
 - Wait until the job has been completed (usually three or four hours in us-east).
 - Request the job output data.
 - Delete each archive listed in the job-output.
+- Retrieve inventories until they reflect that there are no archives in the vault.
 - Delete the vault.
 
 This can become obnoxious. The goal of this tool is to execute synchronous workflows that just stay running until the job is done.
@@ -49,6 +50,10 @@ Example output::
     Requesting archive delete: (1) [dustin-test-archive2]
     Requesting archive delete: (2) [dustin-test-archive3]
     Deleting vault: dustin-test-multi-3
+
+If something happens and your process is interrupted, you may resume by passing the job-ID::
+
+    sg-vault-delete ACCESSKEY SECRETKEY dustin-test-multi-3 --job-id=76c9jSYmg6k9ZbgxdpZLtRq2kDZML_yzhU_1tEL1f_CgEiXjHyKnnoMTDVFciexsGM82k9X1v9K7T0ms-imt9SvPgPW0
 
 
 -----

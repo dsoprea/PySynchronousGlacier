@@ -1,7 +1,8 @@
 import time
-import datetime
 
 import boto.glacier.layer1
+
+import sg.common
 
 _POLL_DELAY_S = 60 * 1
 _ANNOUNCE_INTERVAL_S = 60 * 10
@@ -37,31 +38,13 @@ class Job(object):
         return job_id
 
     def wait_on_job(self, vault_name, job_id):
-        l1 = self.__ar.get_l1()
+        def cb():
+            l1 = self.__ar.get_l1()
+            return l1.get_job_output(vault_name, job_id)
 
-        start_time = time.time()
-        last_announce = None
-
-        while 1:
-            try:
-                r = l1.get_job_output(vault_name, job_id)
-            except boto.glacier.exceptions.UnexpectedHTTPResponseError as e:
-                if ('The job is not currently available for download:' in e.message) is False:
-                    raise
-            else:
-                return r
-
-            run_time = time.time() - start_time
-
-            hours = int(run_time // 3600)
-            minutes = int((run_time % 3600) // 60)
-            seconds = int(run_time - hours * 3600 - minutes * 60)
-
-            now = datetime.datetime.now()
-            if last_announce is None or (now - last_announce).total_seconds() > _ANNOUNCE_INTERVAL_S:
-                print("Sleeping (running {:02d}:{:02d}:{:02d}).".format(hours, minutes, seconds))
-                last_announce = now
-
-            time.sleep(_POLL_DELAY_S)
+        r = sg.common.auto_retry(
+                'wait_on_job',
+                cb,
+                'The job is not currently available for download:')
 
         return r
